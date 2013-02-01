@@ -1,24 +1,25 @@
 ﻿using HtmlAgilityPack;
 using System.Collections.Generic;
+using System;
 
 namespace Sudoku_Solver.Models
 {
     class WebHarvester
     {
-        public WebHarvester()
+        internal List<string> GetSamplePuzzle()
         {
             HtmlWeb htmlWeb = new HtmlWeb();
             HtmlDocument document = htmlWeb.Load("http://show.websudoku.com/?level=1");
             HtmlNodeCollection allInputs = document.DocumentNode.SelectNodes("//input");
-            List<HtmlNode> allSudokuSlots = new List<HtmlNode>();
+            List<string> allSudokuSlots = new List<string>();
             foreach (HtmlNode node in allInputs)
             {
-                if (node.Id.Length>0 && node.Id[0] == 'f')
+                if (node.Id.StartsWith("f"))
                 {
-                    allSudokuSlots.Add(node);
+                    allSudokuSlots.Add(node.InnerText);
                 }
             }
+            return allSudokuSlots;
         }
-        
     }
 }

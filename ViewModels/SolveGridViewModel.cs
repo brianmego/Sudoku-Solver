@@ -75,6 +75,7 @@ namespace Sudoku_Solver.ViewModels
             }
 
             var wh = new Models.WebHarvester();
+            wh.GetSamplePuzzle();
         }
 
         #endregion //Constructor

@@ -26,6 +26,10 @@ namespace Sudoku_Solver.Models
             get { return _row; }
             set
             {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
                 _row = value;
                 RaisePropertyChanged("Row");
             }
@@ -35,6 +39,10 @@ namespace Sudoku_Solver.Models
             get { return _column; }
             set
             {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
                 _column = value;
                 RaisePropertyChanged("Column");
             }
@@ -44,6 +52,10 @@ namespace Sudoku_Solver.Models
             get { return _box; }
             set
             {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
                 _box = value;
                 RaisePropertyChanged("Box");
             }
@@ -53,6 +65,10 @@ namespace Sudoku_Solver.Models
             get { return _value; }
             set
             {
+                if (!AllowedValues.Contains(value))
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
                 _value = value;
                 RaisePropertyChanged("Value");
             }
@@ -69,5 +85,14 @@ namespace Sudoku_Solver.Models
 
         #endregion //Properties
 
+
+        #region Constructor
+
+        public Slot()
+        {
+            AllowedValues = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        }
+
+        #endregion
     }
 }
