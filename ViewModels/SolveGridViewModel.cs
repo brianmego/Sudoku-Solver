@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Acme.Common.Infrastructure;
 using Sudoku_Solver.Models;
+using System.Windows.Input;
 
 namespace Sudoku_Solver.ViewModels
 {
@@ -73,11 +74,35 @@ namespace Sudoku_Solver.ViewModels
                     SlotList.Add(slot);
                 }
             }
-
-            var wh = new Models.WebHarvester();
-            wh.GetSamplePuzzle();
         }
 
         #endregion //Constructor
+
+        
+        #region Commands
+        public ICommand GeneratePuzzleCommand
+        {
+            get { return new RelayCommand(GeneratePuzzle); }
+        }
+        #endregion
+
+
+        #region Methods
+
+        public void GeneratePuzzle()
+        {
+            var wh = new Models.WebHarvester();
+            var slots = wh.GetSamplePuzzle();
+            for (int i = 0; i < slots.Count; i++)
+            {
+                SlotList[i].Value = slots[i];
+                if (slots[i] != "")
+                {
+
+                }
+            }
+        }
+
+        #endregion
     }
 }

@@ -16,7 +16,7 @@ namespace Sudoku_Solver.Models
             {
                 if (node.Id.StartsWith("f"))
                 {
-                    allSudokuSlots.Add(node.InnerText);
+                    allSudokuSlots.Add(node.GetAttributeValue("value", ""));
                 }
             }
             return allSudokuSlots;

@@ -73,7 +73,6 @@ namespace TestSudokuSolver
         public void SolveGridViewModelConstructorTest()
         {
             SolveGridViewModel target = new SolveGridViewModel();
-            Assert.Inconclusive("TODO: Implement code to verify target");
         }
 
         /// <summary>
@@ -82,13 +81,11 @@ namespace TestSudokuSolver
         [TestMethod()]
         public void SlotListTest()
         {
-            SolveGridViewModel target = new SolveGridViewModel(); // TODO: Initialize to an appropriate value
-            List<Slot> expected = null; // TODO: Initialize to an appropriate value
-            List<Slot> actual;
-            target.SlotList = expected;
-            actual = target.SlotList;
+            SolveGridViewModel target = new SolveGridViewModel();
+            int expected = 81;
+            int actual;
+            actual = target.SlotList.Count;
             Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
         }
 
         /// <summary>
@@ -98,7 +95,7 @@ namespace TestSudokuSolver
         public void SolveGridHeightTest()
         {
             SolveGridViewModel target = new SolveGridViewModel();
-            int expected = 0;
+            int expected = 450;
             int actual;
             target.SolveGridHeight = expected;
             actual = target.SolveGridHeight;
@@ -111,13 +108,32 @@ namespace TestSudokuSolver
         [TestMethod()]
         public void SolveGridWidthTest()
         {
-            SolveGridViewModel target = new SolveGridViewModel(); // TODO: Initialize to an appropriate value
-            int expected = 0; // TODO: Initialize to an appropriate value
+            SolveGridViewModel target = new SolveGridViewModel();
+            int expected = 450;
             int actual;
             target.SolveGridWidth = expected;
             actual = target.SolveGridWidth;
             Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+        }
+
+        /// <summary>
+        ///A test for GetSamplePuzzle
+        ///</summary>
+        [TestMethod()]
+        public void GetSamplePuzzleTest()
+        {
+            SolveGridViewModel target = new SolveGridViewModel();
+            target.GeneratePuzzle();
+            bool expected = false;
+            foreach (var slot in target.SlotList)
+            {
+                if (slot.Value != "")
+                    expected = true;
+            }
+            if (expected==false)
+            {
+                Assert.Fail("SlotList was not populated");
+            }
         }
     }
 }

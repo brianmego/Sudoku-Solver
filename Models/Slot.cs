@@ -13,8 +13,8 @@ namespace Sudoku_Solver.Models
         private int _row;
         private int _column;
         private int _box;
-        private int _value;
-        private List<int> _allowedValues;
+        private string _value;
+        private List<string> _allowedValues;
 
         #endregion //Declarations
 
@@ -60,20 +60,20 @@ namespace Sudoku_Solver.Models
                 RaisePropertyChanged("Box");
             }
         }
-        public int Value
+        public string Value
         {
             get { return _value; }
             set
             {
                 if (!AllowedValues.Contains(value))
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentException("Provided value not a valid option");
                 }
                 _value = value;
                 RaisePropertyChanged("Value");
             }
         }
-        public List<int> AllowedValues
+        public List<string> AllowedValues
         {
             get { return _allowedValues; }
             set
@@ -90,7 +90,8 @@ namespace Sudoku_Solver.Models
 
         public Slot()
         {
-            AllowedValues = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            AllowedValues = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
+            Value = "";
         }
 
         #endregion

@@ -71,7 +71,6 @@ namespace TestSudokuSolver
         public void WebHarvesterConstructorTest()
         {
             WebHarvester target = new WebHarvester();
-            Assert.Inconclusive("TODO: Implement code to verify target");
         }
 
         [TestMethod()]

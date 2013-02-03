@@ -73,11 +73,11 @@ namespace TestSudokuSolver
         public void SlotConstructorTest()
         {
             Slot target = new Slot();
-            Assert.IsNotNull(target.AllowedValues);
-            Assert.IsNotNull(target.Value);
-            Assert.IsNotNull(target.Box);
-            Assert.IsNotNull(target.Column);
-            Assert.IsNotNull(target.Row);
+            Assert.IsNotNull(target.AllowedValues, "AllowedValues is Null");
+            Assert.IsNotNull(target.Value, "Value is Null");
+            Assert.IsNotNull(target.Box, "Box is Null");
+            Assert.IsNotNull(target.Column, "Column is Null");
+            Assert.IsNotNull(target.Row, "Row is Null");
         }
 
         /// <summary>
@@ -87,8 +87,8 @@ namespace TestSudokuSolver
         public void AllowedValuesTest()
         {
             Slot target = new Slot();
-            List<int> expected = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            List<int> actual;
+            List<string> expected = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
+            List<string> actual;
             actual = target.AllowedValues;
             Assert.AreEqual(actual.Except(expected).ToList().Count, 0);
             Assert.AreEqual(expected.Except(actual).ToList().Count, 0);
@@ -143,9 +143,9 @@ namespace TestSudokuSolver
         public void ValueTest()
         {
             Slot target = new Slot();
-            int expected = 0;
-            int actual;
-            target.Value = expected;
+            string expected = "0";
+            string actual;
+            target.Value = "0";
             actual = target.Value;
             Assert.AreEqual(expected, actual);
         }
@@ -154,11 +154,11 @@ namespace TestSudokuSolver
         ///A negative boundary test for Value
         ///</summary>
         [TestMethod()]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void ValueTestNegative()
         {
             Slot target = new Slot();
-            int input = -1;
+            string input = "-1";
             target.Value = input;
         }
 
