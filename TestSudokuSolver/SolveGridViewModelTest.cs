@@ -135,5 +135,25 @@ namespace TestSudokuSolver
                 Assert.Fail("SlotList was not populated");
             }
         }
+
+        /// <summary>
+        ///A test for Clear
+        ///</summary>
+        [TestMethod()]
+        public void ClearTest()
+        {
+            SolveGridViewModel target = new SolveGridViewModel();
+            target.SlotList.Add(new Slot() { Value = "3" });
+            target.Clear();
+
+            int expected = 0;
+            int actual = 0;
+            foreach (Slot s in target.SlotList)
+            {
+                if (s.Value != "")
+                    actual++;
+            }
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

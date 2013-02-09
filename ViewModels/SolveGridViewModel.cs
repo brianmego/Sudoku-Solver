@@ -5,6 +5,7 @@ using System.Text;
 using Acme.Common.Infrastructure;
 using Sudoku_Solver.Models;
 using System.Windows.Input;
+using System.Windows;
 
 namespace Sudoku_Solver.ViewModels
 {
@@ -84,6 +85,18 @@ namespace Sudoku_Solver.ViewModels
         {
             get { return new RelayCommand(GeneratePuzzle); }
         }
+        public ICommand SolvePuzzleCommand
+        {
+            get { return new RelayCommand(SolvePuzzle); }
+        }
+        public ICommand ClearCommand
+        {
+            get { return new RelayCommand(Clear); }
+        }
+        public ICommand ExitCommand
+        {
+            get { return new RelayCommand(Exit); }
+        }
         #endregion
 
 
@@ -96,11 +109,25 @@ namespace Sudoku_Solver.ViewModels
             for (int i = 0; i < slots.Count; i++)
             {
                 SlotList[i].Value = slots[i];
-                if (slots[i] != "")
-                {
-
-                }
             }
+        }
+
+        public void Exit()
+        {
+            Application.Current.Shutdown();
+        }
+
+        public void Clear()
+        {
+            foreach (Slot s in SlotList)
+            {
+                s.Value = "";
+            }
+        }
+
+        public void SolvePuzzle()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

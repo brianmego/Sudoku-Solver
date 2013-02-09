@@ -27,25 +27,25 @@ namespace Sudoku_Solver.Views
         private void DrawGameBoard(List<Models.Slot> slotList)
         {
             int desiredSlots = (int)Math.Sqrt(slotList.Count);
-            RowDefinition[] rowDefinitions = new RowDefinition[desiredSlots];
-            ColumnDefinition[] columnDefinitions = new ColumnDefinition[desiredSlots];
-
             for (int i = 0; i < desiredSlots; i++)
             {
-                rowDefinitions[i] = new RowDefinition();
-                columnDefinitions[i] = new ColumnDefinition();
-
-                grdGameBoard.RowDefinitions.Add(rowDefinitions[i]);
-                grdGameBoard.ColumnDefinitions.Add(columnDefinitions[i]);
+                RowDefinition rd = new RowDefinition();
+                rd.MinHeight = 30;
+                ColumnDefinition cd = new ColumnDefinition();
+                cd.MinWidth = 30;
+                
+                grdGameBoard.RowDefinitions.Add(rd);
+                grdGameBoard.ColumnDefinitions.Add(cd);
             }
+
             foreach (Models.Slot slot in slotList)
             {
                 var textBox = new TextBox();
                 textBox.Margin = new Thickness(5);
                 textBox.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Center;
                 textBox.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
-                Grid.SetRow(textBox, slot.Row);
-                Grid.SetColumn(textBox, slot.Column);
+                Grid.SetRow(textBox, slot.Row - 1);
+                Grid.SetColumn(textBox, slot.Column - 1);
                 Binding myBinding = new Binding("Value");
                 myBinding.Source = slot;
                 textBox.SetBinding(TextBox.TextProperty, myBinding);
