@@ -7,14 +7,11 @@
              mc:Ignorable="d"
              Height="{Binding Path=SolveGridHeight}"
              Width="{Binding Path=SolveGridWidth}">
-    <UserControl.DataContext>
-        <local:SolveGridViewModel />
-    </UserControl.DataContext>
     <Grid Name="grdGameBoard" >
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10" Content="Generate" Command="{Binding GeneratePuzzle}"/>
+        <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10" Content="Generate" Command="{Binding GeneratePuzzleCommand}"/>
     </Grid>
 </UserControl>
