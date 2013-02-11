@@ -72,7 +72,7 @@ namespace TestSudokuSolver
         [TestMethod()]
         public void SlotConstructorTest()
         {
-            Slot target = new Slot();
+            Slot target = new Slot(1, 1, 1, "1");
             Assert.IsNotNull(target.AllowedValues, "AllowedValues is Null");
             Assert.IsNotNull(target.Value, "Value is Null");
             Assert.IsNotNull(target.Box, "Box is Null");
@@ -86,8 +86,8 @@ namespace TestSudokuSolver
         [TestMethod()]
         public void AllowedValuesTest()
         {
-            Slot target = new Slot();
-            List<string> expected = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
+            Slot target = new Slot(1, 1, 1);
+            List<string> expected = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
             List<string> actual;
             actual = target.AllowedValues;
             Assert.AreEqual(actual.Except(expected).ToList().Count, 0);
@@ -100,8 +100,8 @@ namespace TestSudokuSolver
         [TestMethod()]
         public void BoxTest()
         {
-            Slot target = new Slot();
-            int expected = 0;
+            Slot target = new Slot(1, 1, 1);
+            int expected = 1;
             int actual;
             target.Box = expected;
             actual = target.Box;
@@ -114,8 +114,8 @@ namespace TestSudokuSolver
         [TestMethod()]
         public void ColumnTest()
         {
-            Slot target = new Slot();
-            int expected = 0;
+            Slot target = new Slot(1, 1, 1);
+            int expected = 1;
             int actual;
             target.Column = expected;
             actual = target.Column;
@@ -128,8 +128,8 @@ namespace TestSudokuSolver
         [TestMethod()]
         public void RowTest()
         {
-            Slot target = new Slot();
-            int expected = 0;
+            Slot target = new Slot(1, 1, 1);
+            int expected = 1;
             int actual;
             target.Row = expected;
             actual = target.Row;
@@ -142,10 +142,10 @@ namespace TestSudokuSolver
         [TestMethod()]
         public void ValueTest()
         {
-            Slot target = new Slot();
-            string expected = "0";
+            Slot target = new Slot(1, 1, 1);
+            string expected = "1";
             string actual;
-            target.Value = "0";
+            target.Value = "1";
             actual = target.Value;
             Assert.AreEqual(expected, actual);
         }
@@ -157,9 +157,7 @@ namespace TestSudokuSolver
         [ExpectedException(typeof(ArgumentException))]
         public void ValueTestNegative()
         {
-            Slot target = new Slot();
-            string input = "-1";
-            target.Value = input;
+            Slot target = new Slot(1, 1, 1, "-1");
         }
 
         /// <summary>
@@ -169,9 +167,7 @@ namespace TestSudokuSolver
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void BoxTestNegative()
         {
-            Slot target = new Slot();
-            int input = -1;
-            target.Box = input;
+            Slot target = new Slot(1, 1, -1);
         }
 
         /// <summary>
@@ -181,9 +177,7 @@ namespace TestSudokuSolver
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ColumnTestNegative()
         {
-            Slot target = new Slot();
-            int input = -1;
-            target.Column = input;
+            Slot target = new Slot(1, -1, 1);
         }
 
         /// <summary>
@@ -193,9 +187,7 @@ namespace TestSudokuSolver
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void RowTestNegative()
         {
-            Slot target = new Slot();
-            int input = -1;
-            target.Row = input;
+            Slot target = new Slot(-1, 1, 1);
         }
     }
 }

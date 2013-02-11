@@ -70,6 +70,8 @@ namespace Sudoku_Solver.Models
                     throw new ArgumentException("Provided value not a valid option");
                 }
                 _value = value;
+                if (value != "")
+                    AllowedValues.RemoveAll(x => (x != value && x != ""));
                 RaisePropertyChanged("Value");
             }
         }
@@ -80,6 +82,10 @@ namespace Sudoku_Solver.Models
             {
                 _allowedValues = value;
                 RaisePropertyChanged("AllowedValues");
+                if (AllowedValues.Count == 2)
+                {
+                    this.Value = AllowedValues[0]; //Only Non-blank left
+                }
             }
         }
 
@@ -88,10 +94,14 @@ namespace Sudoku_Solver.Models
 
         #region Constructor
 
-        public Slot()
+        public Slot(int row, int column, int box, string value="")
         {
-            AllowedValues = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
-            Value = "";
+            AllowedValues = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
+
+            Row = row;
+            Column = column;
+            Box = box;
+            Value = value;
         }
 
         #endregion

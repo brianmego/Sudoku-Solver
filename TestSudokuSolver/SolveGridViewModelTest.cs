@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Sudoku_Solver.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TestSudokuSolver
 {
@@ -143,7 +144,7 @@ namespace TestSudokuSolver
         public void ClearTest()
         {
             SolveGridViewModel target = new SolveGridViewModel();
-            target.SlotList.Add(new Slot() { Value = "3" });
+            target.SlotList.Add(new Slot(1, 1, 1, "3"));
             target.Clear();
 
             int expected = 0;
@@ -154,6 +155,23 @@ namespace TestSudokuSolver
                     actual++;
             }
             Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        ///A test for RemoveNeighbors
+        ///</summary>
+        [TestMethod()]
+        public void RemoveNeighborsTest()
+        {
+            List<IGrouping<int, Slot>> slotGroupings = new List<IGrouping<int,Slot>>();
+            SolveGridViewModel target = new SolveGridViewModel();
+            Slot slotA = new Slot(1, 1, 1);
+            Slot slotB = new Slot(1, 2, 1, "1");
+            List<Slot> SlotList = new List<Slot>() { slotA, slotB };
+            
+            slotGroupings.AddRange(SlotList.GroupBy(x => x.Row).ToList());
+            target.RemoveNeighbors(slotGroupings[0]);
+            Assert.IsFalse(slotA.AllowedValues.Contains("1"));
         }
     }
 }
