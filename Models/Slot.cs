@@ -15,7 +15,7 @@ namespace Sudoku_Solver.Models
         private int _box;
         private string _value;
         private List<string> _allowedValues;
-
+        private List<string> _defaultAllowedValues = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
         #endregion //Declarations
 
 
@@ -65,13 +65,21 @@ namespace Sudoku_Solver.Models
             get { return _value; }
             set
             {
-                if (!AllowedValues.Contains(value))
+                if (value == "")
+                {
+                    _value = value;
+                    AllowedValues = DefaultValues.ToList();
+                }
+                else if (!AllowedValues.Contains(value))
                 {
                     throw new ArgumentException("Provided value not a valid option");
                 }
-                _value = value;
-                if (value != "")
-                    AllowedValues.RemoveAll(x => (x != value && x != ""));
+
+                else
+                {
+                    AllowedValues.RemoveAll(x => (x != value));
+                    _value = value;
+                }
                 RaisePropertyChanged("Value");
             }
         }
@@ -82,10 +90,19 @@ namespace Sudoku_Solver.Models
             {
                 _allowedValues = value;
                 RaisePropertyChanged("AllowedValues");
-                if (AllowedValues.Count == 2)
+                if (AllowedValues.Count == 1)
                 {
                     this.Value = AllowedValues[0]; //Only Non-blank left
                 }
+            }
+        }
+        public List<string> DefaultValues
+        {
+            get { return _defaultAllowedValues; }
+            set
+            {
+                _defaultAllowedValues = value;
+                RaisePropertyChanged("DefaultValues");
             }
         }
 
@@ -94,10 +111,12 @@ namespace Sudoku_Solver.Models
 
         #region Constructor
 
-        public Slot(int row, int column, int box, string value="")
+        public Slot(int row, int column, int box, string value="", List<string> defaultValues=null)
         {
-            AllowedValues = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
+            if (defaultValues != null)
+                DefaultValues = defaultValues;
 
+            AllowedValues = new List<string>(DefaultValues);
             Row = row;
             Column = column;
             Box = box;

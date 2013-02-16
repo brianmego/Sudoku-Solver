@@ -90,34 +90,6 @@ namespace TestSudokuSolver
         }
 
         /// <summary>
-        ///A test for SolveGridHeight
-        ///</summary>
-        [TestMethod()]
-        public void SolveGridHeightTest()
-        {
-            SolveGridViewModel target = new SolveGridViewModel();
-            int expected = 450;
-            int actual;
-            target.SolveGridHeight = expected;
-            actual = target.SolveGridHeight;
-            Assert.AreEqual(expected, actual);
-        }
-
-        /// <summary>
-        ///A test for SolveGridWidth
-        ///</summary>
-        [TestMethod()]
-        public void SolveGridWidthTest()
-        {
-            SolveGridViewModel target = new SolveGridViewModel();
-            int expected = 450;
-            int actual;
-            target.SolveGridWidth = expected;
-            actual = target.SolveGridWidth;
-            Assert.AreEqual(expected, actual);
-        }
-
-        /// <summary>
         ///A test for GetSamplePuzzle
         ///</summary>
         [TestMethod()]
@@ -144,7 +116,7 @@ namespace TestSudokuSolver
         public void ClearTest()
         {
             SolveGridViewModel target = new SolveGridViewModel();
-            target.SlotList.Add(new Slot(1, 1, 1, "3"));
+            target.SlotList.Add(new Slot(1, 1, 1, value: "3"));
             target.Clear();
 
             int expected = 0;
@@ -163,15 +135,54 @@ namespace TestSudokuSolver
         [TestMethod()]
         public void RemoveNeighborsTest()
         {
-            List<IGrouping<int, Slot>> slotGroupings = new List<IGrouping<int,Slot>>();
-            SolveGridViewModel target = new SolveGridViewModel();
+            List<List<Slot>> slotGroupings = new List<List<Slot>>();
             Slot slotA = new Slot(1, 1, 1);
             Slot slotB = new Slot(1, 2, 1, "1");
             List<Slot> SlotList = new List<Slot>() { slotA, slotB };
             
-            slotGroupings.AddRange(SlotList.GroupBy(x => x.Row).ToList());
-            target.RemoveNeighbors(slotGroupings[0]);
+            slotGroupings.Add(SlotList.Where(x => x.Row == 1).ToList());
+            SolveGridViewModel.RemoveNeighbors(slotGroupings[0]);
             Assert.IsFalse(slotA.AllowedValues.Contains("1"));
+        }
+
+        /// <summary>
+        ///A test for SolveHiddenSingles
+        ///</summary>
+        [TestMethod()]
+        public void SolveHiddenSinglesTest()
+        {
+            Slot slotA = new Slot(1, 1, 1);
+            Slot slotB = new Slot(1, 2, 1, "1");
+            Slot slotC = new Slot(1, 3, 1, "2");
+            Slot slotD = new Slot(1, 4, 1, "3");
+            Slot slotE = new Slot(1, 5, 1, "4");
+            Slot slotF = new Slot(1, 6, 1, "5");
+            Slot slotG = new Slot(1, 7, 1, "6");
+            Slot slotH = new Slot(1, 8, 1, "7");
+            Slot slotI = new Slot(1, 9, 1, "8");
+
+            List<Slot> SlotList = new List<Slot>() { slotA, slotB, slotC, slotD, slotE, slotF, slotG, slotH, slotI };
+
+            SlotList = SolveGridViewModel.SolveHiddenSingles(SlotList);
+            Assert.AreEqual("9", SlotList[0].Value);
+        }
+
+        /// <summary>
+        ///A test for SolveNakeds
+        ///</summary>
+        [TestMethod()]
+        public void SolveNakedsTest()
+        {
+            List<List<Slot>> slotGroupings = new List<List<Slot>>();
+            Slot slotA = new Slot(1, 1, 1, defaultValues: new List<string>() { "1", "2", "3" });
+            Slot slotB = new Slot(1, 2, 1, defaultValues: new List<string>() { "1", "2" });
+            Slot slotC = new Slot(1, 3, 1, defaultValues: new List<string>() { "1", "2" });
+
+            List<Slot> SlotList = new List<Slot>() { slotA, slotB, slotC};
+            
+            slotGroupings.Add(SlotList.Where(x => x.Row == 1).ToList());
+            List<Slot> result = SolveGridViewModel.SolveNakeds(slotGroupings[0]);
+            Assert.AreEqual(1, result[0].AllowedValues.Count);
         }
     }
 }

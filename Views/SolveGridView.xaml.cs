@@ -31,6 +31,7 @@ namespace Sudoku_Solver.Views
             {
                 RowDefinition rd = new RowDefinition();
                 rd.MinHeight = 30;
+                rd.Height = GridLength.Auto;
                 ColumnDefinition cd = new ColumnDefinition();
                 cd.MinWidth = 30;
                 

@@ -84,10 +84,24 @@ namespace TestSudokuSolver
         ///A test for AllowedValues
         ///</summary>
         [TestMethod()]
-        public void AllowedValuesTest()
+        public void DefaultAllowedValuesTest()
         {
             Slot target = new Slot(1, 1, 1);
-            List<string> expected = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9", "" };
+            List<string> expected = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+            List<string> actual;
+            actual = target.AllowedValues;
+            Assert.AreEqual(actual.Except(expected).ToList().Count, 0);
+            Assert.AreEqual(expected.Except(actual).ToList().Count, 0);
+        }
+
+        /// <summary>
+        ///A test for AllowedValues
+        ///</summary>
+        [TestMethod()]
+        public void SpecifiedAllowedValuesTest()
+        {
+            Slot target = new Slot(1, 1, 1, defaultValues: new List<string>() { "1", "2" });
+            List<string> expected = new List<string>() { "1", "2" };
             List<string> actual;
             actual = target.AllowedValues;
             Assert.AreEqual(actual.Except(expected).ToList().Count, 0);

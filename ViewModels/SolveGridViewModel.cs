@@ -13,35 +13,14 @@ namespace Sudoku_Solver.ViewModels
     {
         #region Declarations
 
-        private int _solveGridHeight = 400;
         private List<Slot> _slotList = new List<Slot>();
         private List<string> AllowedValues;
-        private List<IGrouping<int, Slot>> slotGroupings = new List<IGrouping<int,Slot>>();
+        private List<List<Slot>> slotGroupings = new List<List<Slot>>();
 
         #endregion
 
 
         #region Properties
-
-        public int SolveGridHeight
-        {
-            get { return _solveGridHeight; }
-            set
-            {
-                _solveGridHeight = value;
-                RaisePropertyChanged("SolveGridHeight");
-            }
-        }
-
-        public int SolveGridWidth
-        {
-            get { return _solveGridHeight; }
-            set
-            {
-                SolveGridHeight = value;
-                RaisePropertyChanged("SolveGridWidth");
-            }
-        }
 
         public List<Slot> SlotList
         {
@@ -75,9 +54,12 @@ namespace Sudoku_Solver.ViewModels
             }
 
             AllowedValues = new List<string>(SlotList[0].AllowedValues);
-            slotGroupings.AddRange(SlotList.GroupBy(x => x.Row).ToList());
-            slotGroupings.AddRange(SlotList.GroupBy(x => x.Column).ToList());
-            slotGroupings.AddRange(SlotList.GroupBy(x => x.Box).ToList());       
+            foreach (int allowedValue in SlotList.Select(x => x.Row).AsEnumerable()){
+                slotGroupings.Add(SlotList.Where(x => x.Row == allowedValue).ToList());
+                slotGroupings.Add(SlotList.Where(x => x.Column == allowedValue).ToList());
+                slotGroupings.Add(SlotList.Where(x => x.Box == allowedValue).ToList());
+            }
+    
         }
 
         #endregion //Constructor
@@ -94,7 +76,7 @@ namespace Sudoku_Solver.ViewModels
         }
         public ICommand SolveHiddenSinglesCommand
         {
-            get { return new RelayCommand(SolveHiddenSingles); }
+            get { return new RelayCommand(SolveAllHiddenSingles); }
         }
         public ICommand ClearCommand
         {
@@ -111,6 +93,7 @@ namespace Sudoku_Solver.ViewModels
 
         public void GeneratePuzzle()
         {
+            Clear();
             var wh = new Models.WebHarvester();
             var slots = wh.GetSamplePuzzle();
             for (int i = 0; i < slots.Count; i++)
@@ -122,18 +105,86 @@ namespace Sudoku_Solver.ViewModels
         /// <summary>
         /// Remove filled in entries as possible entries for all slots sharing a row/column/box
         /// </summary>
-        /// <param name="group">Single group of slots to remove neighbors for</param>
-        public void RemoveNeighbors(IGrouping<int,Slot> group)
+        /// <param name="slotGroup">Single group of slots to remove neighbors for</param>
+        public static void RemoveNeighbors(List<Slot> slotGroup)
         {
-            //get the list of values that have been found in that group
-            //for each empty slot in that group
-            //remove all the values that have been filled from possibilities
-            var filledValues = group.Select(x => x.Value).ToList();
-            var emptySlots = group.Where(x => x.Value == "").ToList();
+            var filledValues = slotGroup.Select(x => x.Value).ToList();
+            var emptySlots = slotGroup.Where(x => x.Value == "").ToList();
             foreach (var slot in emptySlots)
             {
                 slot.AllowedValues.RemoveAll(x => filledValues.Contains(x));
             }
+
+        }
+
+        /// <summary>
+        /// If a slot has the only instance of a possible entry in its row/column/box, remove
+        /// all its other possible entries
+        /// </summary>
+        /// <param name="group">Single group of slots to solve for</param>
+        public static List<Slot> SolveHiddenSingles(List<Slot> slotGroup)
+        {
+            List<string> allowedValues = new List<string>();
+            foreach (List<string> valueGroup in slotGroup.Select(x => x.AllowedValues))
+            {
+                allowedValues.AddRange(valueGroup);
+            }
+            foreach (string val in allowedValues.Distinct())
+            {
+                //If a given entry is only possible once
+                if (slotGroup.Count(x => x.AllowedValues.Contains(val)) == 1)
+                {
+                    //Set it as the value for that Slot
+                    slotGroup.First(x => x.AllowedValues.Contains(val)).Value = val;
+                }
+            }
+            return slotGroup;
+        }
+        
+        /// <summary>
+        /// If a group of slots has identical AllowedValues and there are only enough slots to 
+        /// satisfy one value / slot, remove those AllowedValues from other slots in the group
+        /// </summary>
+        public static List<Slot> SolveNakeds(List<Slot> slotGroup)
+        {
+            foreach (Slot s in slotGroup.Where(x=>(x.AllowedValues.Count > 1)))
+            {
+                var matchingSlots = slotGroup.Where(x => (x.AllowedValues.Count == s.AllowedValues.Count) &&
+                                                     (x.AllowedValues.Except(s.AllowedValues).Count() == 0));
+                if (matchingSlots.Count() == s.AllowedValues.Count)
+                    foreach (Slot slotToPurge in slotGroup.Where(x => !matchingSlots.Contains(x)))
+                        slotToPurge.AllowedValues.RemoveAll(x=> s.AllowedValues.Contains(x));
+            }
+            return slotGroup;
+        }
+
+        /// <summary>
+        /// Close the program
+        /// </summary>
+        public void Exit()
+        {
+            Application.Current.Shutdown();
+        }
+
+        /// <summary>
+        /// Set all slots to blank values
+        /// </summary>
+        public void Clear()
+        {
+            foreach (Slot s in SlotList)
+            {
+                s.Value = "";
+            }
+        }
+
+        /// <summary>
+        /// Run the solving functions in the correct order until the puzzle is solved
+        /// </summary>
+        public void SolvePuzzle()
+        {
+            SolveAllHiddenSingles();
+            RemoveAllNeighbors();
+            SolveAllNakeds();
         }
 
         /// <summary>
@@ -142,7 +193,7 @@ namespace Sudoku_Solver.ViewModels
         private void RemoveAllNeighbors()
         {
             //For each slotGrouping
-            foreach (IGrouping<int, Slot> group in slotGroupings.AsEnumerable())
+            foreach (List<Slot> group in slotGroupings.AsEnumerable())
             {
                 RemoveNeighbors(group);
             }
@@ -152,46 +203,16 @@ namespace Sudoku_Solver.ViewModels
         /// If a slot has the only instance of a possible entry in its row/column/box, remove
         /// all its other possible entries
         /// </summary>
-        public void SolveHiddenSingles()
+        private void SolveAllHiddenSingles()
         {
-            //For each slotGrouping
             foreach (var group in slotGroupings.AsEnumerable())
-            {
-                foreach (string val in AllowedValues)
-                {
-                    //If a given entry is only possible once
-                    if (group.Count(x => x.AllowedValues.Contains(val)) == 1)
-                    {
-                        //Set it as the value for that Slot
-                        group.First(x => x.AllowedValues.Contains(val)).Value = val;
-                    }
-                }
-            }
+                SolveHiddenSingles(group);
         }
 
-        public void SolveNakeds()
+        private void SolveAllNakeds()
         {
-
-        }
-
-        public void Exit()
-        {
-            Application.Current.Shutdown();
-        }
-
-        public void Clear()
-        {
-            foreach (Slot s in SlotList)
-            {
-                s.Value = "";
-            }
-        }
-
-        public void SolvePuzzle()
-        {
-            SolveHiddenSingles();
-            RemoveAllNeighbors();
-            throw new NotImplementedException();
+            foreach (var group in slotGroupings.AsEnumerable())
+                SolveNakeds(group);
         }
 
         #endregion

@@ -5,28 +5,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d"
-             Height="{Binding Path=SolveGridHeight}"
-             Width="{Binding Path=SolveGridWidth}"
              d:DesignHeight="400"
              d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Name="grdGameBoard" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <Grid Name="grdControls" Grid.Row="1">
+        
+        <Grid Name="grdGameBoard" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" ShowGridLines="True" />
+        
+        <Grid Name="grdControls" Grid.Row="1" >
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            
             <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button Margin="10" Content="Generate" Command="{Binding GeneratePuzzleCommand}"/>
                 <Button Content="Solve" Margin="10" Command="{Binding SolvePuzzleCommand}"/>
                 <Button Content="Solve Hidden Singles" Margin="10" Command="{Binding SolveHiddenSinglesCommand}"/>
             </StackPanel>
-            <Button Grid.Row="2" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Clear" Command="{Binding ClearCommand}"/>
-            <Button Grid.Row="2" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Exit" Command="{Binding ExitCommand}"/>
+            
+            <Button Grid.Row="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Clear" Command="{Binding ClearCommand}"/>
+            <Button Grid.Row="1" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Exit" Command="{Binding ExitCommand}"/>
 
         </Grid>
     </Grid>
