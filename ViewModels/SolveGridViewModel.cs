@@ -66,9 +66,21 @@ namespace Sudoku_Solver.ViewModels
 
         
         #region Commands
-        public ICommand GeneratePuzzleCommand
+        public ICommand GenerateEasyPuzzleCommand
         {
-            get { return new RelayCommand(GeneratePuzzle); }
+            get { return new RelayCommand(GenerateEasyPuzzle); }
+        }
+        public ICommand GenerateMediumPuzzleCommand
+        {
+            get { return new RelayCommand(GenerateMediumPuzzle); }
+        }
+        public ICommand GenerateHardPuzzleCommand
+        {
+            get { return new RelayCommand(GenerateHardPuzzle); }
+        }
+        public ICommand GenerateEvilPuzzleCommand
+        {
+            get { return new RelayCommand(GenerateEvilPuzzle); }
         }
         public ICommand SolvePuzzleCommand
         {
@@ -91,11 +103,42 @@ namespace Sudoku_Solver.ViewModels
 
         #region Methods
 
-        public void GeneratePuzzle()
+        public void GenerateEasyPuzzle()
         {
             Clear();
             var wh = new Models.WebHarvester();
-            var slots = wh.GetSamplePuzzle();
+            var slots = wh.GetEasyPuzzle();
+            for (int i = 0; i < slots.Count; i++)
+            {
+                SlotList[i].Value = slots[i];
+            }
+        }
+
+        public void GenerateMediumPuzzle()
+        {
+            Clear();
+            var wh = new Models.WebHarvester();
+            var slots = wh.GetMediumPuzzle();
+            for (int i = 0; i < slots.Count; i++)
+            {
+                SlotList[i].Value = slots[i];
+            }
+        }
+        public void GenerateHardPuzzle()
+        {
+            Clear();
+            var wh = new Models.WebHarvester();
+            var slots = wh.GetHardPuzzle();
+            for (int i = 0; i < slots.Count; i++)
+            {
+                SlotList[i].Value = slots[i];
+            }
+        }
+        public void GenerateEvilPuzzle()
+        {
+            Clear();
+            var wh = new Models.WebHarvester();
+            var slots = wh.GetEvilPuzzle();
             for (int i = 0; i < slots.Count; i++)
             {
                 SlotList[i].Value = slots[i];
@@ -182,9 +225,17 @@ namespace Sudoku_Solver.ViewModels
         /// </summary>
         public void SolvePuzzle()
         {
-            SolveAllHiddenSingles();
-            RemoveAllNeighbors();
-            SolveAllNakeds();
+            int iterations = 0;
+            while (SlotList.Count(x => x.Value == "") > 0)
+            {
+                RemoveAllNeighbors();
+                SolveAllHiddenSingles();
+                SolveAllNakeds();
+
+                iterations++;
+                if (iterations > 10)
+                    break;
+            }
         }
 
         /// <summary>

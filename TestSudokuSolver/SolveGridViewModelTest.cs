@@ -96,7 +96,7 @@ namespace TestSudokuSolver
         public void GetSamplePuzzleTest()
         {
             SolveGridViewModel target = new SolveGridViewModel();
-            target.GeneratePuzzle();
+            target.GenerateEasyPuzzle();
             bool expected = false;
             foreach (var slot in target.SlotList)
             {

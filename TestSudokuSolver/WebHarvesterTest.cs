@@ -13,8 +13,6 @@ namespace TestSudokuSolver
     [TestClass()]
     public class WebHarvesterTest
     {
-
-
         private TestContext testContextInstance;
 
         /// <summary>
@@ -79,7 +77,7 @@ namespace TestSudokuSolver
             WebHarvester target = new WebHarvester();
             int expected = 81;
             int actual;
-            actual = (target.GetSamplePuzzle()).Count;
+            actual = (target.GetEasyPuzzle()).Count;
             Assert.AreEqual(expected, actual);
         }
     }
