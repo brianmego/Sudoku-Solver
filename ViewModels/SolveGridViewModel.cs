@@ -106,8 +106,7 @@ namespace Sudoku_Solver.ViewModels
         public void GenerateEasyPuzzle()
         {
             Clear();
-            var wh = new Models.WebHarvester();
-            var slots = wh.GetEasyPuzzle();
+            var slots = WebHarvester.GetEasyPuzzle();
             for (int i = 0; i < slots.Count; i++)
             {
                 SlotList[i].Value = slots[i];
@@ -117,8 +116,7 @@ namespace Sudoku_Solver.ViewModels
         public void GenerateMediumPuzzle()
         {
             Clear();
-            var wh = new Models.WebHarvester();
-            var slots = wh.GetMediumPuzzle();
+            var slots = WebHarvester.GetMediumPuzzle();
             for (int i = 0; i < slots.Count; i++)
             {
                 SlotList[i].Value = slots[i];
@@ -127,8 +125,7 @@ namespace Sudoku_Solver.ViewModels
         public void GenerateHardPuzzle()
         {
             Clear();
-            var wh = new Models.WebHarvester();
-            var slots = wh.GetHardPuzzle();
+            var slots = WebHarvester.GetHardPuzzle();
             for (int i = 0; i < slots.Count; i++)
             {
                 SlotList[i].Value = slots[i];
@@ -137,8 +134,7 @@ namespace Sudoku_Solver.ViewModels
         public void GenerateEvilPuzzle()
         {
             Clear();
-            var wh = new Models.WebHarvester();
-            var slots = wh.GetEvilPuzzle();
+            var slots = WebHarvester.GetEvilPuzzle();
             for (int i = 0; i < slots.Count; i++)
             {
                 SlotList[i].Value = slots[i];

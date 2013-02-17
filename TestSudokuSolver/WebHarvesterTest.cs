@@ -61,23 +61,12 @@ namespace TestSudokuSolver
         //
         #endregion
 
-
-        /// <summary>
-        ///A test for WebHarvester Constructor
-        ///</summary>
         [TestMethod()]
-        public void WebHarvesterConstructorTest()
+        public void GetEasyPuzzleTest()
         {
-            WebHarvester target = new WebHarvester();
-        }
-
-        [TestMethod()]
-        public void GetSamplePuzzleTest()
-        {
-            WebHarvester target = new WebHarvester();
             int expected = 81;
             int actual;
-            actual = (target.GetEasyPuzzle()).Count;
+            actual = (WebHarvester.GetEasyPuzzle()).Count;
             Assert.AreEqual(expected, actual);
         }
     }

@@ -4,9 +4,9 @@ using System;
 
 namespace Sudoku_Solver.Models
 {
-    class WebHarvester
+    static class WebHarvester
     {
-        internal List<string> GetPuzzle(int level)
+        private static List<string> GetPuzzle(int level)
         {
             HtmlWeb htmlWeb = new HtmlWeb();
             HtmlDocument document = htmlWeb.Load("http://show.websudoku.com/?level=" + level);
@@ -22,22 +22,22 @@ namespace Sudoku_Solver.Models
             return allSudokuSlots;
         }
 
-        internal List<string> GetEasyPuzzle()
+        internal static List<string> GetEasyPuzzle()
         {
             return GetPuzzle(1);
         }
 
-        internal List<string> GetMediumPuzzle()
+        internal static List<string> GetMediumPuzzle()
         {
             return GetPuzzle(2);
         }
 
-        internal List<string> GetHardPuzzle()
+        internal static List<string> GetHardPuzzle()
         {
             return GetPuzzle(3);
         }
 
-        internal List<string> GetEvilPuzzle()
+        internal static List<string> GetEvilPuzzle()
         {
             return GetPuzzle(4);
         }
