@@ -146,43 +146,64 @@ namespace TestSudokuSolver
         }
 
         /// <summary>
-        ///A test for SolveHiddenSingles
+        ///A test for SolveHiddens
         ///</summary>
         [TestMethod()]
-        public void SolveHiddenSinglesTest()
+        public void SolveTwoHiddensTest()
         {
-            Slot slotA = new Slot(1, 1, 1);
-            Slot slotB = new Slot(1, 2, 1, "1");
-            Slot slotC = new Slot(1, 3, 1, "2");
-            Slot slotD = new Slot(1, 4, 1, "3");
-            Slot slotE = new Slot(1, 5, 1, "4");
-            Slot slotF = new Slot(1, 6, 1, "5");
-            Slot slotG = new Slot(1, 7, 1, "6");
-            Slot slotH = new Slot(1, 8, 1, "7");
-            Slot slotI = new Slot(1, 9, 1, "8");
+            List<Slot> SlotList = new List<Slot>() { 
+                new Slot(1, 1, 1, defaultValues: new List<string>() { "1", "2", "3" }), 
+                new Slot(1, 2, 1, defaultValues: new List<string>() { "1", "2", "4" })};
 
-            List<Slot> SlotList = new List<Slot>() { slotA, slotB, slotC, slotD, slotE, slotF, slotG, slotH, slotI };
+            SlotList = SolveGridViewModel.SolveHiddens(SlotList);
+            Assert.AreEqual(2, SlotList[0].AllowedValues.Count);
+        }
 
-            SlotList = SolveGridViewModel.SolveHiddenSingles(SlotList);
-            Assert.AreEqual("9", SlotList[0].Value);
+        /// <summary>
+        ///A test for SolveHiddens
+        ///</summary>
+        [TestMethod()]
+        public void SolveThreeHiddensTest()
+        {
+            List<Slot> SlotList = new List<Slot>() { 
+                new Slot(1, 1, 1, defaultValues: new List<string>() { "1", "2", "3", "4" }), 
+                new Slot(1, 2, 1, defaultValues: new List<string>() { "1", "2", "3", "5" }),
+                new Slot(1, 2, 1, defaultValues: new List<string>() { "1", "2", "3", "6" })};
+
+            SlotList = SolveGridViewModel.SolveHiddens(SlotList);
+            Assert.AreEqual(3, SlotList[0].AllowedValues.Count);
         }
 
         /// <summary>
         ///A test for SolveNakeds
         ///</summary>
         [TestMethod()]
-        public void SolveNakedsTest()
+        public void SolveTwoNakedsTest()
         {
-            List<List<Slot>> slotGroupings = new List<List<Slot>>();
-            Slot slotA = new Slot(1, 1, 1, defaultValues: new List<string>() { "1", "2", "3" });
-            Slot slotB = new Slot(1, 2, 1, defaultValues: new List<string>() { "1", "2" });
-            Slot slotC = new Slot(1, 3, 1, defaultValues: new List<string>() { "1", "2" });
-
-            List<Slot> SlotList = new List<Slot>() { slotA, slotB, slotC};
+            List<Slot> SlotList = new List<Slot>() { 
+                new Slot(1, 1, 1, defaultValues: new List<string>() { "1", "2", "3" }), 
+                new Slot(1, 2, 1, defaultValues: new List<string>() { "1", "2" }), 
+                new Slot(1, 3, 1, defaultValues: new List<string>() { "1", "2" })};
             
-            slotGroupings.Add(SlotList.Where(x => x.Row == 1).ToList());
-            List<Slot> result = SolveGridViewModel.SolveNakeds(slotGroupings[0]);
+            List<Slot> result = SolveGridViewModel.SolveNakeds(SlotList);
             Assert.AreEqual(1, result[0].AllowedValues.Count);
         }
+
+        /// <summary>
+        ///A test for SolveNakeds
+        ///</summary>
+        [TestMethod()]
+        public void SolveThreeNakedsTest()
+        {
+            List<Slot> SlotList = new List<Slot>() { 
+                new Slot(1, 1, 1, defaultValues: new List<string>(){"1", "2", "3", "4"}), 
+                new Slot(1, 2, 1, defaultValues: new List<string>() { "1", "2", "3" }), 
+                new Slot(1, 3, 1, defaultValues: new List<string>() { "1", "2", "3" }), 
+                new Slot(1, 3, 1, defaultValues: new List<string>() { "1", "2", "3" })};
+
+            List<Slot> result = SolveGridViewModel.SolveNakeds(SlotList);
+            Assert.AreEqual(1, result[0].AllowedValues.Count);
+        }
+
     }
 }

@@ -86,10 +86,6 @@ namespace Sudoku_Solver.ViewModels
         {
             get { return new RelayCommand(SolvePuzzle); }
         }
-        public ICommand SolveHiddenSinglesCommand
-        {
-            get { return new RelayCommand(SolveAllHiddenSingles); }
-        }
         public ICommand ClearCommand
         {
             get { return new RelayCommand(Clear); }
@@ -122,6 +118,7 @@ namespace Sudoku_Solver.ViewModels
                 SlotList[i].Value = slots[i];
             }
         }
+        
         public void GenerateHardPuzzle()
         {
             Clear();
@@ -131,6 +128,7 @@ namespace Sudoku_Solver.ViewModels
                 SlotList[i].Value = slots[i];
             }
         }
+        
         public void GenerateEvilPuzzle()
         {
             Clear();
@@ -179,9 +177,33 @@ namespace Sudoku_Solver.ViewModels
             }
             return slotGroup;
         }
-        
+
         /// <summary>
-        /// If a group of slots has identical AllowedValues and there are only enough slots to 
+        /// If a subgroup of slots has the only instances of AllowedValues in the group and there are
+        /// only enough values to satisfy one value/slot, remove all other AllowedValues from the subgroup
+        /// </summary>
+        /// <param name="slotGroup">Single group of slots to solve for</param>
+        /// <returns>Group of slots with extraneous AllowedValues removed</returns>
+        public static List<Slot> SolveHiddens(List<Slot> slotGroup)
+        {
+            foreach (Slot s in slotGroup.Where(x => (x.AllowedValues.Count > 1)))
+            {
+                foreach (string val in s.AllowedValues)
+                {
+                    var slotsWithThisVal = slotGroup.Where(x => x.AllowedValues.Contains(val));
+                    slotsWithThisVal.Count();
+
+
+                    // If x possible Entries are spread across x slots in the collection, remove those slots'
+                    // other possibleEntries.
+                }
+            }
+
+            return slotGroup;
+        }
+
+        /// <summary>
+        /// If a subgroup of slots has identical AllowedValues and there are only enough slots to 
         /// satisfy one value / slot, remove those AllowedValues from other slots in the group
         /// </summary>
         public static List<Slot> SolveNakeds(List<Slot> slotGroup)

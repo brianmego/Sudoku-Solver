@@ -27,7 +27,6 @@
                 <Button Margin="10" Content="Generate Hard" Command="{Binding GenerateHardPuzzleCommand}"/>
                 <Button Margin="10" Content="Generate Evil" Command="{Binding GenerateEvilPuzzleCommand}"/>
                 <Button Content="Solve" Margin="10" Command="{Binding SolvePuzzleCommand}"/>
-                <Button Content="Solve Hidden Singles" Margin="10" Command="{Binding SolveHiddenSinglesCommand}"/>
             </StackPanel>
             
             <Button Grid.Row="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Clear" Command="{Binding ClearCommand}"/>
