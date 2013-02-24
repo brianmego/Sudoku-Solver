@@ -82,7 +82,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlotTest.cs" />
     <Compile Include="SolveGridViewModelTest.cs" />
-    <Compile Include="WebHarvesterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sudoku Solver.csproj">

@@ -146,6 +146,21 @@ namespace TestSudokuSolver
         }
 
         /// <summary>
+        /// A test for SolveHiddens
+        /// </summary>
+        [TestMethod()]
+        public void SolveHiddenSingleTest()
+        {
+            List<Slot> SlotList = new List<Slot>() { 
+                new Slot(1, 1, 1, defaultValues: new List<string>() { "1", "2", "3", "4", "5", "6" }), 
+                new Slot(1, 2, 1, defaultValues: new List<string>() { "1", "2", "3", "4", "5" }),
+                new Slot(1, 3, 1, defaultValues: new List<string>() { "1", "2", "3", "4", "5" })};
+
+            SlotList = SolveGridViewModel.SolveHiddens(SlotList);
+            Assert.AreEqual(1, SlotList[0].AllowedValues.Count);
+        }
+
+        /// <summary>
         ///A test for SolveHiddens
         ///</summary>
         [TestMethod()]

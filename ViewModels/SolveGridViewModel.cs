@@ -140,6 +140,21 @@ namespace Sudoku_Solver.ViewModels
         }
 
         /// <summary>
+        /// If there's only one allowed value for a slot, set the value to the lone allowed
+        /// </summary>
+        /// <param name="slotGroup">Group of slots to process on</param>
+        public static void SetLoneValues(List<Slot> slotGroup)
+        {
+            foreach (Slot s in slotGroup)
+            {
+                if (s.AllowedValues.Count == 1 && s.Value == "")
+                {
+                    s.Value = s.AllowedValues[0];
+                }
+            }
+        }
+
+        /// <summary>
         /// Remove filled in entries as possible entries for all slots sharing a row/column/box
         /// </summary>
         /// <param name="slotGroup">Single group of slots to remove neighbors for</param>
@@ -171,8 +186,7 @@ namespace Sudoku_Solver.ViewModels
                 //If a given entry is only possible once
                 if (slotGroup.Count(x => x.AllowedValues.Contains(val)) == 1)
                 {
-                    //Set it as the value for that Slot
-                    slotGroup.First(x => x.AllowedValues.Contains(val)).Value = val;
+                    slotGroup.First(x => x.AllowedValues.Contains(val)).AllowedValues.RemoveAll(x => x != val);
                 }
             }
             return slotGroup;
@@ -186,19 +200,49 @@ namespace Sudoku_Solver.ViewModels
         /// <returns>Group of slots with extraneous AllowedValues removed</returns>
         public static List<Slot> SolveHiddens(List<Slot> slotGroup)
         {
-            foreach (Slot s in slotGroup.Where(x => (x.AllowedValues.Count > 1)))
+            //We're going to declare all the variables here so this is more clear below
+
+            List<string> allowedValues = new List<string>();        //All the remaining allowed values in the group
+            List<Slot> slotsNotSet = new List<Slot>();              //All slots that do not yet have a value
+            Dictionary<string, int> valueCounts = 
+                new Dictionary<string, int>();                      //How many times each allowed value appears in the group
+            List<string> valuesWithiInstances = new List<string>(); //Which values appear i times in the group? (This will change in the loop)
+            List<Slot> slotsWithHiddens = new List<Slot>();         //Slots that contain the values listed in the variable above
+
+            slotsNotSet.AddRange(slotGroup.Where(x => x.AllowedValues.Count > 1));
+            foreach (List<string> valueGroup in slotsNotSet.Select(x => x.AllowedValues))
             {
-                foreach (string val in s.AllowedValues)
-                {
-                    var slotsWithThisVal = slotGroup.Where(x => x.AllowedValues.Contains(val));
-                    slotsWithThisVal.Count();
+                allowedValues.AddRange(valueGroup);
+            }
+            allowedValues = allowedValues.Distinct().ToList();
 
-
-                    // If x possible Entries are spread across x slots in the collection, remove those slots'
-                    // other possibleEntries.
-                }
+            foreach (string val in allowedValues)
+            {
+                valueCounts.Add(val, slotGroup.Count(x => x.AllowedValues.Contains(val)));
             }
 
+            for (int i = 1; i <= 9; i++)
+            {
+                valuesWithiInstances.Clear();
+                valuesWithiInstances.AddRange(valueCounts.Where(x => x.Value == i)
+                                                         .Select(x=>x.Key));
+                if (valuesWithiInstances.Count() == i)
+                {
+                    slotsWithHiddens.Clear();
+                    foreach (string s in valuesWithiInstances)
+                    {
+                        slotsWithHiddens.AddRange(slotsNotSet.Where(x => x.AllowedValues.Contains(s)));
+                    }
+                    slotsWithHiddens = slotsWithHiddens.Distinct().ToList();
+                    if (slotsWithHiddens.Count == valuesWithiInstances.Count)
+                    {
+                        foreach (Slot slot in slotsWithHiddens)
+                        {
+                            slot.AllowedValues.RemoveAll(x => !valuesWithiInstances.Contains(x));
+                        }
+                    }
+                }
+            }
             return slotGroup;
         }
 
@@ -248,7 +292,9 @@ namespace Sudoku_Solver.ViewModels
             {
                 RemoveAllNeighbors();
                 SolveAllHiddenSingles();
+                //SolveAllHiddens();
                 SolveAllNakeds();
+                SetLoneValues(SlotList);
 
                 iterations++;
                 if (iterations > 10)
@@ -282,6 +328,12 @@ namespace Sudoku_Solver.ViewModels
         {
             foreach (var group in slotGroupings.AsEnumerable())
                 SolveNakeds(group);
+        }
+
+        private void SolveAllHiddens()
+        {
+            foreach (var group in slotGroupings.AsEnumerable())
+                SolveHiddens(group);
         }
 
         #endregion

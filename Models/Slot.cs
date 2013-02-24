@@ -90,10 +90,6 @@ namespace Sudoku_Solver.Models
             {
                 _allowedValues = value;
                 RaisePropertyChanged("AllowedValues");
-                if (AllowedValues.Count == 1)
-                {
-                    this.Value = AllowedValues[0]; //Only Non-blank left
-                }
             }
         }
         public List<string> DefaultValues
